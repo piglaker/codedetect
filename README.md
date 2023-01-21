@@ -4,22 +4,23 @@
 
 
 ## Dataset 
-Nature Language Dataset:  
-    CoLA 
-    QNLI  
-    STS-B . 
+- Nature Language Dataset:  
+    - CoLA  
+    - QNLI  
+    - STS-B . 
 
-Programme Language Dataset:  
-    CodeSearchtNet:  
-        go 
-        java 
-        javascript 
-        php 
-        python 
-    POJ104:  
-        c   
+- Programme Language Dataset:  
+    - CodeSearchtNet:  
+        - go 
+        - java  
+        - javascript   
+        - php  
+        - python   
+    - POJ104:  
+        - c   
 
 ## Method  
+
 Bert Embeddings + textCNN 
 
 epoch 10 
