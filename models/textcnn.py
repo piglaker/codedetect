@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 torch.manual_seed(1)
 
 class CNN(nn.Module):
-    def __init__(self, input_size, embedding_dim, kernel_wins, num_class, embedding):
+    def __init__(self, input_size=21168, embedding_dim=768, kernel_wins=[3,4,5], num_class=2, embedding=None):
         super(CNN, self).__init__()
         if embedding is None:
             self.embedding = nn.Embedding(21168, embedding_dim, max_norm=True, padding_idx=-100)
@@ -23,7 +23,7 @@ class CNN(nn.Module):
         self.dropout = nn.Dropout(0.1)
         self.fc = nn.Linear(len(kernel_wins)*embedding_dim, num_class)
 
-    def forward(self, input_ids, labels, attention_mask):
+    def forward(self, input_ids, labels=None, attention_mask=None):
         embeded_x = self.embedding(input_ids)
 
         embeded_x = embeded_x.transpose(1, 2)
@@ -40,7 +40,8 @@ class CNN(nn.Module):
         logits = self.fc(fc_x)
         
         loss_function = torch.nn.CrossEntropyLoss()#BCEWithLogitsLoss()
-        #print(logits.shape, labels.shape) 
-        loss = loss_function( logits.float(), labels.long().squeeze(1) )
-         
+        if labels != None:
+            loss = loss_function( logits.float(), labels.long().squeeze(1) )
+        else:
+            loss = None 
         return loss, logits

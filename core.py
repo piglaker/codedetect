@@ -170,7 +170,7 @@ def get_metrics():
 
         Turtle = time.time() - Achilles
 
-        return {"Acc": float(acc),"Metric_time":Turtle}
+        return {"Acc": float(acc),"Metric_time":Turtle, "AVG_eval_tim": Turtle / len(sources)}
 
     return compute_metrics
 

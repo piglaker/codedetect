@@ -6,6 +6,7 @@ import os
 from typing import Dict, List
 import itertools
 import csv
+import random
 
 from tqdm import tqdm
 from transformers import (
@@ -48,7 +49,7 @@ def read_code(head="/remote-home/xtzhang/playground/tmp/codedetect/data/eng/code
     program_names = [ "python", "go", "php", "java", "javascript", ]
     
     code_data = { i:[] for i in types }
-    trunc_table = {"train":12000, "dev":1500, "test":1500}
+    trunc_table = {"train":1200000, "dev":150000, "test":150000}
 
     for program_name in program_names:
         for i in types:
@@ -76,12 +77,22 @@ def read_code(head="/remote-home/xtzhang/playground/tmp/codedetect/data/eng/code
     code_data["dev"].extend(all_c[12000:13500]) 
     code_data["test"].extend(all_c[13500:])
     
+    #shuflle
+    for v in  code_data.values():
+        random.shuffle(v)
+    
+    code_data["train"], code_data["dev"], code_data["test"] = code_data["train"][:3000], \
+        code_data["dev"][:1000], \
+        code_data["test"][:1000]
+    
+    for i in code_data.values():
+        print(len(i)) 
     return code_data
 
 def read_nature(head="/remote-home/xtzhang/playground/tmp/codedetect/data/eng/nature"):
     #dirs = os.listdir( nature_dir )
     types = [ "train", "dev", "test" ]
-    dataset_names = [ "QNLI", "QQP", "STS-B", "WNLI", ]
+    dataset_names = [ "QNLI", "STS-B", ]
     
     def get_CoLA_data(i):
         data=[]
@@ -91,14 +102,14 @@ def read_nature(head="/remote-home/xtzhang/playground/tmp/codedetect/data/eng/na
                 data.append(line[-1])         
         return data
     
-    def get_pairs_data_template(name, i):
+    def get_pairs_data_template(name, _type):
         data=[]
-        with open(head + "/" + name + "/" + i + ".tsv") as fd:
+        with open(head + "/" + name + "/" + _type + ".tsv") as fd:
             rd=csv.reader(fd, delimiter="\t", quotechar='"')
             for i, line in enumerate(rd):
                 if i == 0:
                     continue
-                if i != "test":
+                if _type != "test":
                     data.append(line[-2])
                     data.append(line[-3])
                 else:
@@ -107,17 +118,33 @@ def read_nature(head="/remote-home/xtzhang/playground/tmp/codedetect/data/eng/na
         return data
     
     nature_data = { i:[] for i in types }
-    trunc_table = {"train":12000, "dev":1500, "test":1500}
+    trunc_table = {"train":2000000, "dev":100000000, "test":1000000000}
 
     for name in dataset_names:
         for i in types:
             tmp = get_pairs_data_template(name, i)#read_csv( head + "/" +path )
+            #print(name, i)
             nature_data[i].extend(tmp[:trunc_table[i]])
     
     for i in types:
         tmp = get_CoLA_data(i)
         nature_data[i].extend(tmp[:trunc_table[i]])
     
+    #with open("./tmp.txt", "w") as writer:
+    #    for i in nature_data.values():
+    #        writer.write("\n".join( i ))
+    
+    #shuflle
+    
+    for v in  nature_data.values():
+        random.shuffle(v) 
+    nature_data["train"], nature_data["dev"], nature_data["test"] = nature_data["train"][:30000], \
+        nature_data["dev"][:10000], \
+            nature_data["test"][:10000]
+    
+    for i in nature_data.values():
+        print(len(i))
+        
     return nature_data
     
 from fastNLP import cache_results

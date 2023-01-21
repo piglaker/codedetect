@@ -220,9 +220,10 @@ def run():
             label = predict_results.label_ids[i]
             if tmp == label[0]:
                 acc += 1
-            final_results.append(s+str(tmp) + str(label[0]))
+            #else:
+            final_results.append( "\t".join([s, str(tmp), str(label[0])]) )
         
-        print("Test Acc:", acc / len(test_dataset))
+        print("Test Acc:", acc / len(test_dataset), )
 
         with open(output_prediction_file, "w") as writer:
             writer.write("\n".join(final_results))

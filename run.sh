@@ -17,7 +17,7 @@ gtx3090=23480
 available_gpus=""
 
 if [ ! -n "$5" ] ;then
-    BATCH_SIZE=48 #0.005 0.05 
+    BATCH_SIZE=512 #0.005 0.05 
 else
     BATCH_SIZE=$5
 fi
@@ -53,8 +53,8 @@ echo "Use GPUs: "${available_gpus}
 TASK="codedetect"
 MODEL_NAME="textcnn"
 
-if [ ! -d "./logs/${TASK}/${DATASET}" ]; then
-    mkdir ./logs/${TASK}/${DATASET}
+if [ ! -d "./logs/${TASK}" ]; then
+    mkdir ./logs/${TASK}
 fi
 
 PRETRAINED_NAME=bert # pretrain bert type
@@ -79,7 +79,7 @@ name=${MODEL_NAME}"_eval"${EVAL_DATASET}"_epoch"${EPOCH}"_bs"${BATCH_SIZE}"_seed
 
 OUTPUT_DIR=./tmp/${DATASET}//${PRETRAINED_NAME}/${name}
 
-LOG_PATH=logs/${TASK}/${DATASET}/${MODEL_NAME}/${PRETRAINED_NAME}/${name}.log
+LOG_PATH=logs/${TASK}/${MODEL_NAME}/${PRETRAINED_NAME}/${name}.log
 
 #seed 153603 27 3472
 #lr  5e-5 7e-5 6e-5
